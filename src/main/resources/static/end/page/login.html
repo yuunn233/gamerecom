@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+<!--    <link href="../css/bootstrap.css">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.4/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../css/font-awesome.css" rel="stylesheet"/>
+</head>
+
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        /* 设置背景图片 */
+        body {
+            background-image: url('../img/signin.jpg'); /* 替换为你的图片路径 */
+            background-size: cover; /* 使图片覆盖整个页面 */
+            background-position: center; /* 将图片居中 */
+            background-repeat: no-repeat; /* 防止图片重复 */
+            height: 100vh; /* 确保背景覆盖整个视口高度 */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* 垂直居中 */
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8); /* 添加半透明背景，使内容更清晰 */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px; /* 限制容器的最大宽度 */
+            box-sizing: border-box;
+        }
+
+
+        .panel-body {
+            padding: 0;
+        }
+    </style>
+</head>
+<body >
+<div id="app" class="container" v-cloak>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h2 style="color:#0eb4cf;"><b>欢迎登录游戏推荐系统</b></h2>
+        </div>
+    </div>
+    <hr style="border-color: #1CC09F"/>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1" >
+            <div class="panel-body"  style="width: 100%; padding-right: 20px; text-align: center; margin: 0 auto; max-width: 400px;">
+                <form>
+                    <br/>
+
+                    <!-- 用户名输入框 -->
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                        <input type="text" class="form-control" v-model="user.name" placeholder="用户名" style="width: 100%;">
+                    </div>
+
+                    <!-- 密码输入框 -->
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        <input type="password" class="form-control" v-model="user.password" placeholder="密码" style="width: 100%;">
+                    </div>
+
+                    <!-- 角色选择 -->
+                    <h5 style="text-align: center;color:#0eb4cf"><b>请选择角色</b></h5>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <select v-model="user.level" class="form-control" style="width: 100%;">
+                            <option v-for="item in authorities" :value="item.level">{{ item.name }}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-inline"></label>
+                        <span class="pull-left" >
+                            <a href="javascript:void(0)" @click="signup" style="color: #488a70"><i>注册</i></a>
+                        </span>
+                        <label class="checkbox-inline"></label>
+                        <span class="pull-right" >
+                            <a href="javascript:void(0)" @click="reset" style="color: #488a70"><i>忘记密码？</i></a>
+                        </span>
+                    </div>
+
+                    <!-- 登录和注册按钮 -->
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="javascript:void(0)" @click="login" class="btn btn-primary">登录</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/vue2.6.11/vue.min.js"></script>
+<script src="../js/vue2.6.11/axios.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            user: {
+                name: "",
+                password: "",
+                level: null
+            },
+            authorities: []
+        },
+        created: function () {
+
+            axios.get("/getAuthority").then(res => {
+                if (res.data.code === '0'){
+                    this.authorities = res.data.data;
+                }else {
+                    alert(res.data.msg);
+                }
+            });
+        },
+        methods: {
+            //登录
+            login() {
+                if (!this.user.name) {
+                    alert("请输入用户名");
+                    return;
+                }
+                if (!this.user.password) {
+                    alert("请输入密码");
+                    return;
+                }
+                if (!this.user.level) {
+                    alert("请选择角色");
+                    return;
+                }
+                axios.post('/login', this.user).then(res => {
+                    if (res.data.code === '0') {
+                        localStorage.setItem('user', JSON.stringify(res.data.data));
+                        window.location = '/front/index.html';
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            },
+
+            //注册
+            signup(){
+
+                window.location = '/end/page/register.html';
+            },
+            //忘记密码
+            reset(){
+                if (!this.user.name) {
+                    alert("请输入用户名");
+                    return;
+                }
+                if (!this.user.level) {
+                    alert("请选择角色");
+                    return;
+                }
+                //重置密码的请求
+                axios.post('/resetPassword', this.user).then(res => {
+                    if (res.data.code === '0') {
+                        alert("重置密码成功，密码重置为123456")
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

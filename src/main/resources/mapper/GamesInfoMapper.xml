@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.gamerecom.dao.Games_infoDao">
+
+    <select id="findByName" resultType="com.example.gamerecom.entity.Games_info">
+        select * from games_info where 1=1
+        <if test="name != null and name !='' and name !='all'">
+            and name like concat('%',#{name},'%')
+        </if>
+        order by id desc
+    </select>
+    <select id="findByTypeId" resultType="com.example.gamerecom.entity.Games_info">
+        select * from games_info where typeId = #{typeId} order by id desc limit 20
+    </select>
+    <select id="findRecommendGames" resultType="com.example.gamerecom.entity.Games_info">
+        select * from games_info where isRecommend = '是' order by id desc
+    </select>
+    <select id="findHotGames" resultType="com.example.gamerecom.entity.Games_info">
+        select * from games_info order by hot desc
+    </select>
+    <select id="searchGames" resultType="com.example.gamerecom.entity.Games_info">
+        select * from games_info where name like concat('%',#{text},'%') limit 10
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(id) from games_info
+    </select>
+    <select id="findDateGames" resultType="com.example.gamerecom.entity.Games_info">
+        select * from games_info order by launchDate desc
+    </select>
+    <!--    <select id="getGame" resultType="com.example.gamerecom.entity.Games_info">-->
+<!--        select g.* from games_info g-->
+<!--    </select>-->
+
+
+</mapper>

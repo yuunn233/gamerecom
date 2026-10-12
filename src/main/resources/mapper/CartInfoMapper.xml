@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.gamerecom.dao.Cart_infoDao">
+
+    <select id="findCartByUserId" resultType="com.example.gamerecom.entity.Cart_info">
+        select c.*,g.name gamesName from cart_info c
+            left join games_info g on c.gamesId = g.id
+            where c.userId=#{userId} and c.level=#{level}
+    </select>
+
+    <select id="findAll" resultType="com.example.gamerecom.entity.Cart_info">
+        select c.*,g.name gamesName from cart_info c
+            left join games_info g on c.gamesId = g.id
+    </select>
+</mapper>

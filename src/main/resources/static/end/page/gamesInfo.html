@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游戏详情信息</title>
+    <link href="../css/bootstrap.css" rel="stylesheet"/>
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.4/dist/css/bootstrap.css" rel="stylesheet">-->
+    <link href="../css/font-awesome.css" rel="stylesheet"/>
+    <link href="../css/custom-styles.css" rel="stylesheet"/>
+    <link href="../css/element/index.css" rel="stylesheet"/>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        body {
+            background-image: url('../img/back4.jpg'); /* 替换为你的背景图片路径 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            color: #8ac5db;
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+<div id="wrapper" v-cloak>
+    <div class="row">
+        <div class="col-md-12" style="height: 60px;">
+            <nav class="navbar navbar-default top-navbar">
+                <div class="row" style="background-color: #8ac5db">
+                    <div class="col-md-2">
+                        <a class="navbar-brand" style="width: 100%;background-color: #85c3b7;" href="index.html">
+                            <strong style="font-size: 20px;">游戏推荐系统</strong>
+                        </a>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="navbar-header">
+                            <a href="/front/index.html" style="color: white;line-height: 60px;font-size: 16px;margin-left: 30px">
+                                <b>首页</b>
+                            </a>
+                        </div>
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li style="color:#ffffff;">欢迎管理员：{{user.name}}</li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-user fa-fw"></i>
+                                    <i class="fa fa-caret-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:void(0)" @click="personalPage">
+                                            <i class="fa fa-user fa-fw"></i>个人信息
+                                        </a>
+                                    </li>
+                                    <hr/>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="logout">
+                                            <i class="fa fa-sign-out fa-fw"></i>退出
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <br style="margin-top: 10px;"/>
+    <div class="row" >
+        <div class="col-md-2" >
+            <nav id="nav-id" class="navbar navbar-default navbar-side">
+                <div class="sidebar-collapse" >
+                    <ul class="nav" id="main-menu" >
+                        <li >
+                            <a href="index.html" ><i class="fa fa-dashboard"></i>首页 </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-sitemap"></i>信息管理<span class="fa arrow"></span> </a>
+                            <ul class="nav nav-second-level collapse in">
+                                <li v-if="authority.indexOf(1) != -1">
+                                    <a href="adminInfo.html" ><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">管理员信息</span> </a>
+                                </li>
+                                <li v-if="authority.indexOf(3) != -1">
+                                    <a href="userInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">用户信息</span> </a>
+                                </li>
+<!--                                <li v-if="authority.indexOf(4) != -1">-->
+<!--                                    <a href="messageInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">在线交流信息</span> </a>-->
+<!--                                </li>-->
+<!--                                <li v-if="authority.indexOf(1000001) != -1">-->
+<!--                                    <a href="advertiserInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">公告信息</span> </a>-->
+<!--                                </li>-->
+<!--                                <li v-if="authority.indexOf(1000003) != -1">-->
+<!--                                    <a href="linkInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">友情链接</span> </a>-->
+<!--                                </li>-->
+                                <li v-if="authority.indexOf(1000015) != -1">
+                                    <a href="gamesInfo.html" class="active-menu"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">游戏详情信息</span> </a>
+                                </li>
+<!--                                收藏栏-->
+                                <li v-if="authority.indexOf(1000016) != -1">
+                                    <a href="cartInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">收藏栏信息</span> </a>
+                                </li>
+<!--                                <li v-if="authority.indexOf(1000017) != -1">-->
+<!--                                    <a href="orderInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">订单信息</span> </a>-->
+<!--                                </li>-->
+                                <li v-if="authority.indexOf(1000018) != -1">
+                                    <a href="commentInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">评价信息</span> </a>
+                                </li>
+                                <li v-if="authority.indexOf(1000014) != -1" >
+                                    <a href="typeInfo.html" ><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">游戏类型信息</span> </a>
+                                </li>
+                                <li >
+                                    <a href="javascript:void(0)" @click="personalPage"><i class="fa fa-user"></i>个人信息</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="updatePassword.html"><i class="fa fa-unlock-alt"></i>修改密码 </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" @click="logout"><i class="fa fa-power-off"></i>退出登录 </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="col-md-10" style="background-color: #FFFFFF">
+            <div id="page-wrapper" style="background-color: #FFFFFF">
+                <div class="row" >
+                    <div class="col-md-12" >
+                        <h1 class="page-header"><small style="color: #90d1e6;margin-left: 5px;font-size: 20px;">游戏详情信息</small></h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="panel panel-default" style="background-color: #f1f8ff;margin-left: 20px">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <div class="nx-table-header" style="text-align: right">
+                                    <input type="text"placeholder="请输入搜索内容" v-model="name" @keyup.enter="loadTable(1)">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                    <button class="btn btn-sm btn-primary" v-on:click="add()" style="margin-right: 20px" >新增</button>
+
+                                </div>
+                                <table class="table table-striped table-bordered table-hover" style="color: #1b6d85">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; vertical-align: middle;">ID</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏名称</th>
+                                            <th style="width:20%; text-align: center; vertical-align: middle;">游戏介绍</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏类型</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏价格</th>
+<!--                                            <th style="text-align: center; vertical-align: middle;">游戏折扣</th>-->
+<!--                                            <th style="text-align: center; vertical-align: middle;">游戏销量</th>-->
+                                            <th style="text-align: center; vertical-align: middle;">游戏点赞</th>
+                                            <th style="text-align: center; vertical-align: middle;">是否推荐</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏上线时间</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏厂商</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏评分</th>
+                                            <th style="text-align: center; vertical-align: middle;">游戏图片</th>
+                                            <th style="text-align: center; vertical-align: middle;width: 8%;">操作</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody v-for="obj in objs ">
+                                        <tr>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.id}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.name}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.details}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.typeName}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.price}}</td>
+<!--                                            <td style="text-align: center; vertical-align: middle;">{{obj.discount}}</td>-->
+<!--                                            <td style="text-align: center; vertical-align: middle;">{{obj.sales}}</td>-->
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.hot}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.isRecommend}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.launchDate}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.maker}}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{obj.scores}}</td>
+                                            <td style="text-align: center; vertical-align: middle;"><button class="btn btn-primary btn-xs" @click="viewModal(obj)">预览</button></td>
+
+                                            <td style="text-align: center; vertical-align: middle;">
+                                                <button class="btn btn-primary btn-xs" v-on:click="init(obj)" style="margin-right: 5px">编辑</button>
+                                                <button class="btn btn-primary btn-xs" v-on:click="del(obj.id)">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <nav style="text-align: center">
+                                    <ul class="pagination" >
+                                        <li class="page-item" v-bind:class="{disabled: preActive}">
+                                            <a class="page-link" href="javascript:void(0)" v-on:click="loadTable(pageInfo.pageNum - 1)">上一页</a>
+                                        </li>
+
+                                        <li class="page-item" v-bind:class="{disabled: preActive}">
+                                            <a class="page-link" href="javascript:void(0)"  v-if="pageInfo.pageNum >1"
+                                               v-on:click="loadTable(pageInfo.pageNum - 1)">{{pageInfo.pageNum - 1}}</a>
+                                        </li>
+
+                                        <li class="page-item disabled" >
+                                            <a class="page-link" href="javascript:void(0)">{{pageInfo.pageNum}}</a>
+                                        </li>
+
+                                        <li class="page-item">
+                                            <a class="page-link" href="javascript:void(0)" v-if="pageInfo.hasNextPage"
+                                               v-on:click="loadTable( pageInfo.hasNextPage ?(pageInfo.pageNum + 1):pageInfo.pageNum)">{{pageInfo.pageNum + 1}}</a>
+                                        </li>
+
+                                        <li class="page-item" v-bind:class="{disabled: nextActive}">
+                                            <a class="page-link" href="javascript:void(0)"
+                                               v-on:click="loadTable( pageInfo.hasNextPage ?(pageInfo.pageNum + 1):pageInfo.pageNum)">下一页</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    模态框 detail-->
+    <div class="modal" tabindex="-1" id="mod">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">请填写信息</span>
+                    <button type="button" class="close" data-dismiss="modal" @click="entity={}">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="id" name="id" v-model="entity.id">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏名称</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.name" placeholder="请输入游戏名称" id="name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏介绍</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.details" placeholder="请输入游戏介绍" id="details">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏类型</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" v-model="entity.typeId">
+                                    <option v-for="item in typeObjs" :value="item.id">{{item.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏价格</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.price" placeholder="请输入游戏价格" id="price">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏折扣</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.discount" placeholder="请输入游戏折扣,例如0.5（5折）" id="discount">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">是否推荐</label>
+                            <div class="col-sm-7">
+                                <label class="radio-inline"><input type="radio" value="是" v-model="entity.isRecommend">是</label>
+                                <label class="radio-inline"><input type="radio" value="否" v-model="entity.isRecommend">否</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏上线时间</label>
+                            <div class="col-sm-7">
+                                <el-date-picker v-model="entity.launchDate" id="launchDate" type="datetime" clearable value-format="yyyy-MM-dd"
+                                                placeholder="请选择日期"></el-date-picker>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏厂商</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.maker" placeholder="请输入游戏厂商" id="maker">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">游戏评分</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" v-model="entity.scores" placeholder="请输入游戏评分" id="scores">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">上传图片文件</label>
+                            <div class="col-sm-7">
+                                <div style="margin-top: 10px;">
+                                    <input @change="upload" @click="clearFile" multiple="multiple" type="file" ref="file">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="entity={}" style="background-color: #8ebfbf;color: #FFFFFF">关闭</button>
+                    <button type="button" class="btn btn-primary" v-on:click="update()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    模态框 picture-->
+    <div class="modal" tabindex="-1" id="mymod">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">图片浏览</span>
+                    <button type="button" class="close" data-dismiss="modal" @click="cancel">&times;</button>
+                </div>
+                <div id="view-img" class="modal-body" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="../js/jquery-1.10.2.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/jquery.metisMenu.js"></script>
+<script src="../js/custom-scripts.js"></script>
+<script src="../js/my.js"></script>
+<script src="../js/vue2.6.11/vue.min.js"></script>
+<script src="../js/vue2.6.11/axios.js"></script>
+<script src="../js/echarts.min.js"></script>
+<script src="../js/element/index.js"></script>
+<script>
+
+    function msg(type,msg) {
+        Vue.prototype.$message({
+           type: type, //success,warning,error
+           message:msg,
+           duration:2000,
+           offset:100,   //消息框到顶部的距离
+           center:true
+        });
+
+    }
+
+    new Vue({
+        el: "#wrapper",
+        data: {
+            user: {},
+            authority: [],
+            permission: [],
+            name: '',//根据类型名称查询
+            objs: [],//游戏类型列表
+            pageInfo: {},//翻页数据
+            preActive: true, //上一页是否可点击
+            nextActive: true,//下一页是否可点击
+            entity: {},
+            typeObjs: [],//所有的游戏类型
+
+        },
+        created: function () {
+            this.user = JSON.parse(localStorage.getItem('user'));
+            axios.get("/authority").then(res => {
+                if (res.data.code === '0'){
+                    this.authority = res.data.data;
+                    //console.log(res.data.data);
+                }else {
+                    msg('error',res.data.msg);
+                }
+            });
+
+            //判断权限1000015
+            axios.get("/permission/1000015").then(res => {
+                if (res.data.code === '0'){
+                    this.permission = res.data.data;
+                    //console.log(res.data.data);
+                }else {
+                    msg('error',res.data.msg);
+                }
+            });
+
+            axios.get("/typeInfo").then(res => {
+                if (res.data.code === '0'){
+                    this.typeObjs = res.data.data;
+                    //console.log(res.data.data);
+                }else {
+                    msg('error',res.data.msg);
+                }
+            });
+
+            this.loadTable(1);
+
+        },
+        methods: {
+            //分页查询
+            loadTable(pageNum){
+                let name = this.name === ''?'all':this.name;
+                axios.get("/gamesInfo/page/"+name+"?pageNum="+pageNum).then(res => {
+                    if (res.data.code === '0'){
+                        this.objs = res.data.data.list;
+                        this.pageInfo = res.data.data;
+                        this.preActive = !(this.pageInfo.hasPreviousPage);
+                        this.nextActive = !(this.pageInfo.hasNextPage);
+                    }else {
+                        msg('error',res.data.msg);
+                    }
+                });
+            },
+
+            //弹出add模态框
+            add(){
+
+                if (this.permission.indexOf(1) === -1){
+                    msg('warning','无权限');
+                    return;
+                }
+                this.entity = {};
+                $("#mod").modal('show');
+            },
+            //弹出update模态框
+            init(o){
+                if (this.permission.indexOf(3) === -1){
+                    msg('warning','无权限');
+                    return;
+                }
+                this.entity = JSON.parse(JSON.stringify(o));
+                $("#mod").modal('show');
+            },
+            //根据主键ID delete
+            del(id){
+
+                if (this.permission.indexOf(2) === -1){
+                    msg('warning','无权限');
+                    return;
+                }
+
+                let _this = this;
+                this.$confirm('确认要删除吗？','系统提示',{
+                   confirmButtonText: '确定',
+                   cancelButtonText: '取消',
+                   cancelButtonClass: 'btn-custom-cancel',
+                   type: 'warning'
+                }).then(function () {
+                    axios.delete("/gamesInfo/"+id).then(res => {
+                        if (res.data.code === '0') {
+                            msg('success', '删除成功');
+                            $('#mod').modal('hide');
+                            _this.loadTable(1);
+                        } else {
+                            msg('error', res.data.msg);
+                        }
+                    })
+                });
+            },
+            //update
+            update(){
+
+                if(checkValid(this.entity)) {
+                    if (!this.entity.id) {            //新增保存
+                        axios.post("/gamesInfo", this.entity).then(res => {
+                            if (res.data.code === '0') {
+                                msg('success', '添加成功');
+                                $('#mod').modal('hide');
+                                this.loadTable(1);
+                            } else {
+                                msg('error', res.data.msg);
+                            }
+                        })
+                    }else {
+                        axios.put("/gamesInfo", this.entity).then(res => {
+                            if (res.data.code === '0') {
+                                msg('success', '更新成功');
+                                $('#mod').modal('hide');
+                                this.loadTable(1);
+                            } else {
+                                msg('error', res.data.msg);
+                            }
+                        })
+                    }
+                }
+            },
+
+            //上传图片
+            upload: function (){
+                let files = this.$refs.file.files;
+                for (let i=0;i<files.length;i++){
+                    let formData = new FormData;
+                    formData.append('file',files[i]);
+                    axios.post('/files/upload',formData,{'Content-Type':'multipart/form-data'}).then(res => {
+                        if (res.data.code === '0'){
+                            msg('success','上传成功');
+                            this.entity.fileList.push(res.data.data.id);
+                            console.log(res.data.data.id);
+                        }else {
+                            msg('error',res.data.msg);
+                        }
+                    });
+                }
+            },
+            //清空file
+            clearFile:function (){
+                this.entity.fileList = [];
+            },
+            //浏览图片
+            viewModal:function (data){
+                let pictures = JSON.parse(data.pictures);
+                $("#view-img").empty();
+                pictures.forEach(item => {
+                   $("#view-img").append($(`<img id= "img-id" src="/files/download/${item}" style="width:400px;magin-bottom:5px">`));
+                });
+                $("#mymod").modal('show');
+            },
+            cancel:function () {
+
+            }
+        }
+    });
+</script>
+</body>
+</html>

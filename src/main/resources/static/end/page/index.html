@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台首页</title>
+    <link href="../css/bootstrap.css" rel="stylesheet"/>
+    <link href="../css/font-awesome.css" rel="stylesheet"/>
+    <link href="../css/custom-styles.css" rel="stylesheet"/>
+    <link href="../css/element/index.css" rel="stylesheet"/>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        body {
+            background-image: url('../img/back4.jpg'); /* 替换为你的背景图片路径 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            color: #8ac5db;
+            margin: 0;
+            padding: 0;
+        }
+
+        .modern-dashboard {
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        #page-wrapper {
+            background-color: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .dashboard-box {
+            background: linear-gradient(135deg, #85c3b7, #6bb9a6);
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1 1 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
+        }
+
+        .dashboard-box .icon {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+
+        .dashboard-box .text {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .dashboard-image {
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .dashboard-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .dashboard-box {
+                flex: 1 1 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div id="wrapper" v-cloak>
+    <div class="row">
+        <div class="col-md-12" style="height: 60px;">
+            <nav class="navbar navbar-default top-navbar">
+                <div class="row" style="background-color: #8ac5db">
+                    <div class="col-md-2">
+                        <a class="navbar-brand" style="width: 100%;background-color: #85c3b7;" href="index.html">
+                            <strong style="font-size: 20px;">游戏推荐系统</strong>
+                        </a>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="navbar-header">
+                            <a href="/front/index.html" style="color: white;line-height: 60px;font-size: 16px;margin-left: 30px">
+                                <b>首页</b>
+                            </a>
+                        </div>
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li style="color:#ffffff;">欢迎管理员：{{user.name}}</li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-user fa-fw"></i>
+                                    <i class="fa fa-caret-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:void(0)" @click="personalPage">
+                                            <i class="fa fa-user fa-fw"></i>个人信息
+                                        </a>
+                                    </li>
+                                    <hr/>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="logout">
+                                            <i class="fa fa-sign-out fa-fw"></i>退出
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <br style="margin-top: 10px;"/>
+    <div class="row"  >
+        <div class="col-md-2" >
+            <nav id="nav-id" class="navbar navbar-default navbar-side">
+                <div class="sidebar-collapse" >
+                    <ul class="nav" id="main-menu" >
+                        <li >
+                            <a href="index.html" class="active-menu"><i class="fa fa-dashboard"></i>首页 </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-sitemap"></i>信息管理<span class="fa arrow"></span> </a>
+                            <ul class="nav nav-second-level collapse in">
+                                <li v-if="authority.indexOf(1) != -1">
+                                    <a href="adminInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">管理员信息</span> </a>
+                                </li>
+                                <li v-if="authority.indexOf(3) != -1">
+                                    <a href="userInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">用户信息</span> </a>
+                                </li>
+<!--                                <li v-if="authority.indexOf(4) != -1">-->
+<!--                                    <a href="messageInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">在线交流信息</span> </a>-->
+<!--                                </li>-->
+<!--                                <li v-if="authority.indexOf(1000001) != -1">-->
+<!--                                    <a href="advertiserInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">公告信息</span> </a>-->
+<!--                                </li>-->
+<!--                                <li v-if="authority.indexOf(1000003) != -1">-->
+<!--                                    <a href="linkInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">友情链接</span> </a>-->
+<!--                                </li>-->
+                                <li v-if="authority.indexOf(1000015) != -1">
+                                    <a href="gamesInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">游戏详情信息</span> </a>
+                                </li>
+<!--                                收藏栏-->
+                                <li v-if="authority.indexOf(1000016) != -1">
+                                    <a href="cartInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">收藏栏信息</span> </a>
+                                </li>
+<!--                                <li v-if="authority.indexOf(1000017) != -1">-->
+<!--                                    <a href="orderInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">订单信息</span> </a>-->
+<!--                                </li>-->
+                                <li v-if="authority.indexOf(1000018) != -1">
+                                    <a href="commentInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">评价信息</span> </a>
+                                </li>
+                                <li v-if="authority.indexOf(1000014) != -1">
+                                    <a href="typeInfo.html"><i class="fa fa-table sub-icon-mg"></i><span class="mini-sub-pro">游戏类型信息</span> </a>
+                                </li>
+                                <li >
+                                    <a href="javascript:void(0)" @click="personalPage"><i class="fa fa-user"></i>个人信息</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="updatePassword.html"><i class="fa fa-unlock-alt"></i>修改密码 </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" @click="logout"><i class="fa fa-power-off"></i>退出登录 </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="col-md-10 modern-dashboard" style="background-image: url('../img/back3.jpg')">
+            <div id="page-wrapper" style="background-image: url('../img/back3.jpg')">
+                <div class="dashboard-box" id="page-inner1">
+                    <i class="fa fa-user icon"></i>
+                    <span class="text">用户总数：{{totalUser}}</span>
+                </div>
+                <div class="dashboard-box" id="page-inner2">
+                    <i class="fa fa-tag icon"></i>
+                    <span class="text">游戏总数：{{totalGames}}</span>
+                </div>
+                <div class="dashboard-box" id="page-inner3">
+                    <i class="fa fa-tags icon"></i>
+                    <span class="text">游戏类型总数：{{totalType}}</span>
+                </div>
+                <div class="dashboard-image" style="width: 900px">
+                    <img src="../img/back5.jpg" alt="背景图片">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery-1.10.2.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/jquery.metisMenu.js"></script>
+<script src="../js/custom-scripts.js"></script>
+<script src="../js/my.js"></script>
+<script src="../js/vue2.6.11/vue.min.js"></script>
+<script src="../js/vue2.6.11/axios.js"></script>
+<script src="../js/echarts.min.js"></script>
+<script src="../js/element/index.js"></script>
+<script>
+    new Vue({
+        el: "#wrapper",
+        data: {
+            user: {},
+            authority: [],
+            totalUser:0,
+            totalGames:0,
+            totalType:0,
+
+        },
+        created: function () {
+            this.user = JSON.parse(localStorage.getItem('user'));
+            axios.get("/authority").then(res => {
+                if (res.data.code === '0'){
+                    this.authority = res.data.data;
+                    //console.log(res.data.data);
+                }else {
+                    msg('error',res.data.msg);
+                }
+            });
+
+            this.getTotal();
+        },
+        methods: {
+
+            //用户总数
+            getTotal(){
+                axios.get("/echarts/getTotal").then(res => {
+                   let map = res.data.data;
+                   this.totalUser = map['totalUser'];
+                   this.totalGames = map['totalGames'];
+                   this.totalType = map['totalType'];
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游戏详情</title>
+    <link href="css/swiper-5.4.5/swiper.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/my.css" rel="stylesheet"/>
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <style>
+        .nx-nav-container ul{
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nx-nav-container ul li{
+            display: inline-block;
+            width: 120px;
+            text-align: center;
+            line-height: 45px;
+        }
+
+        .nx-nav-container a{
+            color: #FFFFFF;
+        }
+        .nx-nav-container a:hover{
+            color: #00ffff;
+            text-decoration: none;
+        }
+
+        .active {
+            font-weight: bold;
+            color: #0b4759;
+        }
+
+        .left-box{
+            width: 100%;
+            height: 400px;
+            background-color: #ebfff7;
+
+        }
+
+        .right-box{
+            width: 100%;
+            height: 400px;
+            background-color: #ebfff7;
+
+        }
+
+        .right-box li{
+            padding: 10px 40px;
+        }
+
+        .img-item-box{
+            width: 100%;
+            height: 90px;
+            margin-top: 10px;
+        }
+
+        .right-title{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .praise{
+            cursor: pointer;
+            font-size: 20px;
+            margin-left: 20px;
+        }
+
+        .container {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .left-box img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        .right-title {
+            font-size: 30px;
+            color: #1b6d85;
+            font-weight: bold;
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(to right, #76e1d1, #56c7d9);
+            cursor: pointer;
+        }
+
+        .img-item-box {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .left-box, .right-box {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <div style="text-align: center;">
+        <iframe width="700" scrolling="no" height="60" frameborder="0" src="https://i.tianqi.com/index.php?c=code&amp;id=12&amp;num=5"></iframe>
+    </div>
+
+    <div class="nx-header">
+        <div style="display: flex;width: 100%;height: 30px;line-height: 30px;background-color: #f1f8ff;">
+            <div style="flex: 5;padding: 0 10px;color: #1b6d85;">
+                欢迎访问游戏推荐系统
+            </div>
+            <div v-if="user.name" style="flex: 1">
+                欢迎您：{{user.name}}
+                <a style="margin-left: 30px;color: blue;" href="javascript:void(0);" @click="logout">退出</a>
+            </div>
+        </div>
+    </div>
+    <div style="height: 80px;line-height: 80px;">
+        <div style="margin-left: 20px;position: relative;">
+            <img src="img/mylogo.jpg" style="width: 60px;position: absolute;top: 10px;">
+            <b style="margin-left: 60px;font-size: 25px;text-shadow: 5px 5px 3px #d9ecff;color: #1b6d85">游戏推荐系统</b>
+        </div>
+    </div>
+    <div class="nx-nav-container" style="height: 45px;background-color: #9acfea;">
+        <ul>
+            <li class="active"><a href="index.html">首页</a> </li>
+<!--            <li ><a href="advertiserInfo.html">公告信息</a> </li>-->
+<!--            <li ><a href="messageInfo.html">在线交流</a> </li>-->
+<!--            <li ><a href="linkInfo.html">友情链接</a> </li>-->
+            <li ><a href="cartInfo.html">收藏栏信息</a> </li>
+            <li ><a href="commentInfo.html">评价信息</a> </li>
+            <li ><a href="javascript:void(0)" @click="personalPage">个人信息</a> </li>
+            <li v-if="isShow"><a href="/end/page/index.html" target="_blank">进入后台系统</a> </li>
+            <li v-if="!isLogin"><a href="/end/page/login.html" target="_blank">登录</a> </li>
+            <li v-if="!isLogin"><a href="/end/page/register.html" target="_blank">注册</a> </li>
+        </ul>
+    </div>
+
+    <div class="container" style="width: 90%; height: auto; margin: 40px auto; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); padding: 30px;">
+        <div class="row" style="margin-top: 20px; display: flex; flex-direction: column; align-items: center;">
+            <!-- Top Box -->
+            <div class="col-md-12" style="margin-bottom: 20px;">
+                <div class="top-box">
+                    <div style="width: 100%; height: 500px;">
+                        <img id="main-img-id" style="height: 100%; width: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);" :src="mainSrc">
+                    </div>
+                    <ul class="img-item-box" style="margin-top: 10px; display: flex; justify-content: space-between; padding: 0;">
+                        <li v-for="id in pictures" class="col-md-3" style="padding: 5px;">
+                            <img :src="'/files/download/' + id" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" @mouseover="onmouseover(id)">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Box -->
+            <div class="col-md-12">
+                <div class="bottom-box" style="background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="text-align: center;">
+                            <span class="right-title" style="font-size: 30px;color: #1b6d85; font-weight: bold;">{{gamesInfo.name}} </span>
+                            <br/>
+                            <span class="right-title" style="font-size: 20px;color: #1b6d85; font-weight: bold;">游戏ID：{{gamesInfo.id}} </span>
+                        </li>
+
+                        <b style="text-align: left;margin-left: 20px;font-size: 20px; color: #1b6d85;">游戏简介：</b>
+                        <li style="margin-top: 5px;margin-left:50px;color: #2aabd2;font-size: 18px;margin-bottom: 20px;">{{gamesInfo.details}}</li>
+
+                        <b style="text-align: left;margin-left: 20px;font-size: 20px; color: #1b6d85;margin-top: 20px;">游戏厂商：</b>
+                        <li style="margin-top: 15px;color: #2aabd2;margin-left:50px;font-size: 20px;text-align: center"><b>{{gamesInfo.maker}}</b></li>
+
+                        <b style="text-align: left;margin-left: 20px;font-size: 20px; color: #1b6d85;">游戏价格：</b>
+                        <li style="margin-top: 15px;color: #2aabd2;margin-left:50px;font-size: 20px;text-align: center"><b>￥ {{gamesInfo.price}}</b></li>
+
+                        <b style="text-align: left;margin-left: 20px;font-size: 20px; color: #1b6d85;">上线时间：</b>
+                        <li style="margin-top: 15px;color: #2aabd2;margin-left:50px;font-size: 20px;text-align: center"><b>{{gamesInfo.launchDate}}</b></li>
+
+                        <b style="text-align: left;margin-left: 20px;font-size: 20px; color: #1b6d85;">评分：</b>
+                        <li style="margin-top: 15px;color: #2aabd2;margin-left:50px;font-size: 20px;text-align: center;margin-bottom: 50px;"><b>{{gamesInfo.scores}}</b></li>
+
+
+                        <li style="margin-top: 15px;color: #2aabd2;text-align: center;">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <i class="fa fa-thumbs-o-up praise" style="color: #F56C6C; cursor: pointer; font-size: 20px;margin-right: 40px;" @click="hotClick()">
+                                    <span style="margin-left: 5px; font-size: 20px;">{{gamesInfo.hot}}</span>
+                                </i>
+
+                                <button class="btn btn-info" @click="addCart()" style="background: linear-gradient(to right, #56c7d9, #76e1d1); border: none; color: white; padding: 10px 20px; font-size: 16px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background 0.3s ease;">
+                                    收藏
+                                </button>
+                            </div>
+                        </li>
+
+                        <li style="margin-top: 50px;">
+                            <b style="text-align: left;margin-left: 20px;font-size: 20px; color: #1b6d85;">游戏评价：</b>
+                            <div style="background-color: #e9f3ef;width: 90%;margin-left: 50px;">
+                                <form @submit.prevent="submitReview">
+                                    <div style="margin-top: 20px;">
+                                        <label for="rating" style="font-size: 18px; color: #1b6d85;">评分：</label>
+                                        <br>
+                                        <select v-model="review.rating" id="rating" style="padding: 10px; font-size: 16px; width: 90%; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);margin-left: 40px;">
+                                            <option value="1">1分</option>
+                                            <option value="2">2分</option>
+                                            <option value="3">3分</option>
+                                            <option value="4">4分</option>
+                                            <option value="5">5分</option>
+                                            <option value="6">6分</option>
+                                            <option value="7">7分</option>
+                                            <option value="8">8分</option>
+                                            <option value="9">9分</option>
+                                            <option value="10">10分</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="margin-top: 20px;">
+                                        <label for="reviewText" style="font-size: 18px; color: #1b6d85;">评价内容：</label>
+                                        <br>
+                                        <textarea v-model="review.text" id="reviewText" rows="6" style="width: 90%; padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);margin-left: 40px;"></textarea>
+                                    </div>
+
+                                    <div style="margin-top: 10px; text-align: center;">
+                                        <button type="submit" class="btn btn-primary" style="background: linear-gradient(to right, #56c7d9, #76e1d1); border: none; color: white; padding: 12px 24px; font-size: 16px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background 0.3s ease;">
+                                            提交评价
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </li>
+
+                        <div style="width: 95%; background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);margin-top: 40px;margin-left: 10px;">
+                            <h2 style="color: #1b6d85; font-size: 26px; font-weight: bold; margin-bottom: 20px;">类似游戏推荐（基于内容）</h2>
+                            <div style="overflow: hidden;">
+                                <ul style="padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none;">
+                                    <li v-for="item in gamesData" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #f9f9f9; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                                        <a :href="'/front/gamesInfo.html?gamesId=' + item.id" target="_blank" style="text-decoration: none; color: inherit;">
+                                            <div>
+                                                <img :src="item.src" alt="游戏图片" style="height: 100px;width: 120px; border-radius: 10px;">
+                                            </div>
+                                            <div style="font-size: 14px; margin-top: 5px; color: #3cacb1;">{{item.name}}</div>
+                                            <div style="font-size: 14px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                                            <div style="font-size: 14px; color: #00bfae;">价格：￥ {{item.price}}</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/swiper-5.4.5/swiper.min.js"></script>
+<script src="js/vue2.6.11/vue.min.js"></script>
+<script src="js/vue2.6.11/axios.js"></script>
+<script src="js/my.js"></script>
+<script>
+
+    let gamesId = 0;
+    // function msg(type,msg) {
+    //     Vue.prototype.$message({
+    //         type: type, //success,warning,error
+    //         message:msg,
+    //         duration:2000,
+    //         offset:100,   //消息框到顶部的距离
+    //         center:true
+    //     });
+    //
+    // }
+
+
+    new Vue({
+        el: "#wrapper",
+        data:{
+            user: {},
+            isShow: false, //是否显示进入后台
+            isLogin:false,//是否已登录
+            mainSrc:'',//游戏详情图片
+            gamesId:'',//当前游戏id
+            gamesInfo:{},//游戏详情
+            pictures:[],//当前游戏所有图片列表
+            review: { // 评价数据
+                rating: 5,
+                text: ''
+            },
+            gamesList:[],
+            gamesData:[],
+        },
+        created: function () {
+            //查权限
+            axios.get('/auth').then(res => {
+                if(res.data.code === '0'){
+                    this.user = res.data.data;
+                    if(this.user.level === 1){
+                        this.isShow = true;
+                    }
+                    this.isLogin = true;
+
+                    // this.getContentBasedRecommendations();
+                 }
+            });
+            this.gamesId = this.getQueryVariable('gamesId');
+            gamesId = this.gamesId;
+            // alert(this.gamesId);
+            this.loadGameInfo();
+            this.getContentBasedRecommendations();
+
+        },
+
+        methods: {
+            logout() {
+                axios.get('/logout').then(res => {
+                    if (res.data.code === '0') {
+                        location.href = '/front/index.html';
+                    } else {
+                        msg(res.data.msg);
+                    }
+                });
+            },
+            getQueryVariable(variable) {
+                let query = window.location.search.substring(1);
+                let vars = query.split("&");
+                for (let i = 0; i < vars.length; i++) {
+                    let pair = vars[i].split("=");
+                    if (pair[0] === variable) {
+                        return pair[1];
+                    }
+                }
+                return '';
+            },
+
+            //加载游戏详情
+            loadGameInfo(){
+                axios.get("/gamesInfo/"+this.gamesId).then(res => {
+                    this.gamesInfo = res.data.data;
+                    this.mainSrc = '/front/img/default.jpg';
+                    if (this.gamesInfo.pictures){
+                       let pictures = JSON.parse(this.gamesInfo.pictures);
+                       //展示4个
+                        if (pictures.length > 4){
+                            pictures = pictures.splice(0,4);
+                        }
+                        this.pictures = pictures;
+                        if (pictures.length){
+                            this.mainSrc = '/files/download/'+pictures[0];
+                        }
+                    }
+                });
+
+            },
+            //切换图片
+            onmouseover(id){
+                $('#main-img-id').attr('src','/files/download/'+id);
+            },
+
+            //点赞hot
+            hotClick(){
+                axios.put("/gamesInfo",{id: this.gamesId, hot: 1}).then(res => {
+                    if (res.data.code === '0'){
+                        alert("点赞+1");
+                        this.loadGameInfo();
+                    }else {
+                        alert(res.data.msg);
+                    }
+                });
+            },
+            //收藏cart
+            addCart(){
+                if (!this.user.name) {
+                    alert("请先登录");
+                    location.href = '/end/page/login.html';
+                    return;
+                }
+                let data = {userId:this.user.id,level:this.user.level,gamesId:gamesId};
+                axios.post("/cartInfo", data).then(res => {
+                    if (res.data.code === '0') {
+                        alert('收藏成功');
+                    } else {
+                        alert(res.data.msg);
+                    }
+                }).catch(error => {
+                    alert("收藏失败，请稍后重试");
+                });
+            },
+
+            // 提交评价
+            submitReview() {
+                if (!this.user.name) {
+                    alert("请先登录");
+                    location.href = '/end/page/login.html';
+                    return;
+                }
+                if (!this.review.text.trim()) {
+                    alert("评价内容不能为空");
+                    return;
+                }
+                let data = {
+                    userId: this.user.id,
+                    gamesId: this.gamesId,
+                    rating: this.review.rating,
+                    content: this.review.text,
+                    level: this.user.level
+                };
+                axios.post("/commentInfo", data).then(res => {
+                    if (res.data.code === '0') {
+                        alert('评价成功');
+                        this.review.text = ''; // 清空输入框
+                    } else {
+                        alert(res.data.msg);
+                    }
+                }).catch(error => {
+                    alert("评价失败，请稍后重试");
+                });
+            },
+
+            //点击的游戏内容推荐
+            getContentBasedRecommendations() {
+                axios.get(`/gamesInfo/recommendContent/${this.gamesId}`).then(res => {
+                    if (res.data.code === '0') {
+                        this.gamesData = res.data.data; // 将推荐结果存储到 gamesData 中
+                        console.log("点击的游戏内容推荐的游戏列表：", this.gamesData);
+                        this.gamesData.forEach(item => {
+                            let imgDefault = "/front/img/default.jpg";
+                            if (item.pictures) {
+                                let fileId = JSON.parse(item.pictures)[0];
+                                imgDefault = "/files/download/" + fileId;
+                            }
+                            item.src = imgDefault; // 设置图片路径
+                        });
+                        // alert("基于内容的推荐已加载");
+                    } else {
+                        alert(res.data.msg);
+                    }
+                }).catch(err => {
+                    alert('请求失败，请稍后重试');
+                });
+            },
+
+
+        }
+    });
+</script>
+</body>
+</html>

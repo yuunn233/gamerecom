@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游戏推荐系统</title>
+    <link href="css/swiper-5.4.5/swiper.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/my.css" rel="stylesheet"/>
+    <style>
+        .nx-nav-container ul{
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nx-nav-container ul li{
+            display: inline-block;
+            width: 120px;
+            text-align: center;
+            line-height: 45px;
+        }
+
+        .nx-nav-container a{
+            color: #FFFFFF;
+        }
+        .nx-nav-container a:hover{
+            color: #00ffff;
+            text-decoration: none;
+        }
+
+        .swiper-slide img {
+            width: 100%; /* 图片宽度占满容器 */
+            height: 100%; /* 图片高度占满容器 */
+            object-fit: contain; /* 确保图片按比例缩放，不超出容器 */
+            display: block; /* 防止图片有默认的外边距 */
+            margin: auto; /* 居中对齐 */
+        }
+
+        /* 包裹轮播图的容器，用来居中显示 */
+        .carousel-wrapper {
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center;     /* 垂直居中 */
+            height: 100vh;           /* 让容器占据整个视口的高度 */
+            padding: 20px;           /* 给容器添加适当的内边距 */
+        }
+
+        /* 轮播图容器样式 */
+        .swiper-container {
+            width: 80%;              /* 宽度设为页面的80%，避免占满整个空间 */
+            max-width: 1200px;       /* 最大宽度设置为1200px，避免过大 */
+            height: 400px;           /* 设定轮播图的高度 */
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;     /* 给容器添加圆角 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加轻微阴影效果 */
+        }
+
+
+        /* swiper分页器样式 */
+        .swiper-pagination {
+            bottom: 10px; /* 分页器位置 */
+            text-align: center;
+        }
+
+        .swiper-pagination-bullet {
+            background-color: #1b6d85; /* 分页器点的颜色 */
+            opacity: 1;
+            transition: background-color 0.3s ease; /* 平滑的背景颜色过渡 */
+        }
+
+        .swiper-pagination-bullet-active {
+            background-color: #9acfea; /* 激活分页器点的颜色 */
+        }
+
+        /* 轮播图按钮样式 */
+        .swiper-button-prev,
+        .swiper-button-next {
+            color: #2aabd2; /* 按钮颜色 */
+            font-size: 30px; /* 按钮的大小 */
+            transition: color 0.3s ease; /* 按钮颜色平滑过渡 */
+        }
+
+        .swiper-button-prev:hover,
+        .swiper-button-next:hover {
+            color: #00ffff; /* 鼠标悬停时颜色 */
+        }
+
+        /* 居中轮播图按钮 */
+        .swiper-button-prev,
+        .swiper-button-next {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .nx-classfify-container li{
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px dashed #85c3b7;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .nx-classfify-container li.active{
+            background-color: #b3e19d;
+            color: #0eb4cf;
+        }
+
+        .nx-games-container {
+            font-size: 0;
+            line-height: 20px;
+        }
+        .nx-games-container li{
+            width: 20%;
+            display: inline-block;
+            padding: 5px;
+        }
+
+        .nx-games-container img{
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .active {
+            font-weight: bold;
+            color: #0b4759;
+        }
+
+        .direction{
+            color: #2aabd2;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <div style="text-align: center;">
+        <iframe width="700" scrolling="no" height="60" frameborder="0" src="https://i.tianqi.com/index.php?c=code&amp;id=12&amp;num=5"></iframe>
+    </div>
+    <div class="nx-header">
+        <div style="display: flex;width: 100%;height: 30px;line-height: 30px;background-color: #f1f8ff;">
+            <div style="flex: 5;padding: 0 10px;color: #1b6d85;">
+                欢迎访问游戏推荐系统
+            </div>
+            <div v-if="user.name" style="flex: 1">
+                欢迎您：{{user.name}}
+                <a style="margin-left: 30px;color: blue;" href="javascript:void(0);" @click="logout">退出</a>
+            </div>
+        </div>
+    </div>
+    <div style="height: 80px;line-height: 80px;">
+        <div style="margin-left: 20px;position: relative;">
+            <img src="img/mylogo.jpg" style="width: 60px;position: absolute;top: 10px;">
+            <b style="margin-left: 60px;font-size: 25px;text-shadow: 5px 5px 3px #d9ecff;color: #1b6d85">游戏推荐系统</b>
+        </div>
+    </div>
+    <div class="nx-nav-container" style="height: 45px;background-color: #9acfea;">
+        <ul>
+            <li class="active"><a href="index.html">首页</a> </li>
+<!--            <li ><a href="advertiserInfo.html">公告信息</a> </li>-->
+<!--            <li ><a href="messageInfo.html">在线交流</a> </li>-->
+<!--            <li ><a href="linkInfo.html">友情链接</a> </li>-->
+            <li ><a href="cartInfo.html">收藏栏信息</a> </li>
+             <li ><a href="commentInfo.html">评价信息</a> </li>
+            <li ><a href="javascript:void(0)" @click="personalPage">个人信息</a> </li>
+            <li v-if="isShow"><a href="/end/page/index.html" target="_blank">进入后台系统</a> </li>
+            <li v-if="!isLogin"><a href="/end/page/login.html" target="_blank">登录</a> </li>
+            <li v-if="!isLogin"><a href="/end/page/register.html" target="_blank">注册</a> </li>
+        </ul>
+    </div>
+    <div class="swiper-container" style="margin-top: 20px;">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img class="carousel-img" src="img/carousel/carimg3.jpg"></div>
+            <div class="swiper-slide"><img class="carousel-img" src="img/carousel/carimg6.jpg"></div>
+            <div class="swiper-slide"><img class="carousel-img" src="img/carousel/carimg8.jpg"></div>
+            <div class="swiper-slide"><img class="carousel-img" src="img/carousel/carimg1.jpg"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+
+    <div style="width: 90%; height: 650px; margin: 40px auto; text-align: center; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px;">
+        <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 24px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <b>编辑推荐游戏</b>
+        </div>
+        <div style="height: 550px; width: 99%; border: 1px solid #90cfcf;  margin: 20px 10px 10px 10px; position: relative; border-radius: 10px; background-color: #f1f8ff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="padding: 20px; font-size: 14px;height: 500px;">
+                <ul style="padding: 0; line-height: 30px; font-size: 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none; margin: 0;">
+                    <li v-for="item in recommends" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                        <a :href="'/front/gamesInfo.html?gamesId='+item.id" target="_blank">
+                            <div><img :src="item.src" style="height: 100px; border-radius: 10px;"></div>
+                            <div style="text-align: center; font-size: 14px; margin-top: 5px; color: #3cacb1;">{{item.name}} </div>
+                            <div style="text-align: center; font-size: 14px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 14px; text-align: center; color: #00bfae;">价格：$ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div style="text-align: center;position: absolute;bottom: 0;width: 100%">
+                <span class="direction" @click="recommend('left')" style="margin-right: 50px;"> <  </span>
+                <span class="direction" @click="recommend('right')">  > </span>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="width: 90%; height: 650px; margin: 40px auto; text-align: center; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px;">
+        <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 24px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <b>Hot游戏</b>
+        </div>
+        <div style="height: 550px; width: 99%; border: 1px solid #90cfcf;  margin: 20px 10px 10px 10px; position: relative; border-radius: 10px; background-color: #f1f8ff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="padding: 20px; font-size: 14px;height: 500px">
+                <ul style="padding: 0; line-height: 30px; font-size: 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none; margin: 0;">
+                    <li v-for="item in hots" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                        <a :href="'/front/gamesInfo.html?gamesId='+item.id" target="_blank">
+                            <div><img :src="item.src" style="height: 100px; border-radius: 10px;"></div>
+                            <div style="text-align: center; font-size: 14px; margin-top: 5px; color: #3cacb1;">{{item.name}} </div>
+                            <div style="text-align: center; font-size: 14px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 14px; text-align: center; color: #00bfae;">价格：$ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div style="text-align: center;position: absolute;bottom: 0;width: 100%">
+                <span class="direction" @click="hotgames('left')" style="margin-right: 50px;"> <  </span>
+                <span class="direction" @click="hotgames('right')">  > </span>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 90%; height: 650px; margin: 40px auto; text-align: center; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px;">
+        <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 24px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <b>最新上线游戏</b>
+        </div>
+        <div style="height: 550px; width: 99%; border: 1px solid #90cfcf;  margin: 20px 10px 10px 10px; position: relative; border-radius: 10px; background-color: #f1f8ff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="padding: 20px; font-size: 14px;height: 500px">
+                <ul style="padding: 0; line-height: 30px; font-size: 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none; margin: 0;">
+                    <li v-for="item in newDates" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                        <a :href="'/front/gamesInfo.html?gamesId='+item.id" target="_blank">
+                            <div><img :src="item.src" style="height: 100px; border-radius: 10px;"></div>
+                            <div style="text-align: center; font-size: 14px; margin-top: 5px; color: #3cacb1;">{{item.name}} </div>
+                            <div style="text-align: center; font-size: 14px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 14px; text-align: center; color: #00bfae;">价格：$ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div style="text-align: center;position: absolute;bottom: 0;width: 100%">
+                <span class="direction" @click="dategames('left')" style="margin-right: 50px;"> <  </span>
+                <span class="direction" @click="dategames('right')">  > </span>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 90%; height: auto; margin: 40px auto; text-align: center; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px;">
+        <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 20px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <b>基于用户的协同过滤推荐</b>
+        </div>
+        <div style="width: 99%; border: 1px solid #90cfcf; margin: 20px 10px 10px 10px; position: relative; border-radius: 10px; background-color: #f1f8ff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="padding: 20px; font-size: 12px;">
+                <ul style="padding: 0; line-height: 25px; font-size: 12px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none; margin: 0;">
+                    <li v-for="item in gamesData" :key="item.id" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                        <a :href="'/front/gamesInfo.html?gamesId='+item.id" target="_blank">
+                            <div><img :src="item.src" style="height: 80px; border-radius: 10px;"></div>
+                            <div style="text-align: center; font-size: 12px; margin-top: 5px; color: #3cacb1;">{{item.name}}</div>
+                            <div style="text-align: center; font-size: 12px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 12px; text-align: center; color: #00bfae;">价格：$ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 90%; height: auto; margin: 40px auto; text-align: center; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px;">
+        <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 20px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <b>基于物品的协同过滤推荐</b>
+        </div>
+        <div style="width: 99%; border: 1px solid #90cfcf; margin: 20px 10px 10px 10px; position: relative; border-radius: 10px; background-color: #f1f8ff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="padding: 20px; font-size: 12px;">
+                <ul style="padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none;">
+                    <li v-for="item in gamesInfos" :key="item.id" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                        <a :href="'/front/gamesInfo.html?gamesId=' + item.id" target="_blank" style="text-decoration: none; color: inherit;">
+                            <div>
+                                <img :src="item.src" alt="游戏图片" style="height: 80px; width: 120px; border-radius: 10px;">
+                            </div>
+                            <div style="font-size: 14px; margin-top: 5px; color: #3cacb1;">{{item.name}}</div>
+                            <div style="font-size: 14px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 14px; color: #00bfae;">价格：￥ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 90%; height: auto; margin: 40px auto; text-align: center; background: linear-gradient(135deg, #c5eff3, #a3d1cc); border-radius: 15px;">
+        <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 20px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <b>基于内容的游戏推荐</b>
+        </div>
+        <div style="width: 99%; border: 1px solid #90cfcf; margin: 20px 10px 10px 10px; position: relative; border-radius: 10px; background-color: #f1f8ff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="padding: 20px; font-size: 12px;">
+                <ul style="padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; list-style: none;">
+                    <li v-for="item in gamescontent" :key="item.id" style="flex: 0 1 calc(16.66% - 15px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                        <a :href="'/front/gamesInfo.html?gamesId=' + item.id" target="_blank" style="text-decoration: none; color: inherit;">
+                            <div>
+                                <img :src="item.src" alt="游戏图片" style="height: 80px; width: 120px; border-radius: 10px;">
+                            </div>
+                            <div style="font-size: 14px; margin-top: 5px; color: #3cacb1;">{{item.name}}</div>
+                            <div style="font-size: 14px; color: #85c3b7;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 14px; color: #00bfae;">价格：￥ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--游戏分类及展示-->
+    <div style="margin-top: 50px; display: flex; gap: 20px;">
+        <!-- 游戏分类 -->
+        <div style="width: 18%; margin-left: 70px; height: 600px; border: 1px solid #8ebfbf; border-radius: 15px; background-color: #c7e3dc; box-shadow: 0 4px 12px rgb(241,248,255);">
+            <div style="height: 40px; background-color: #a9e7fb; width: 100%; font-size: 24px; line-height: 40px; text-align: center; color: #1b6d85; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <b>游戏分类</b>
+            </div>
+            <div style="text-align: center; padding: 10px;" class="nx-classfify-container">
+                <ul style="padding: 0; list-style: none; margin: 0;">
+                    <li v-for="(item,index) in typeObjs" :class="{active: index === activeIndex}" @click="findByTypeId(index,item.id)"
+                        style="padding: 10px 0; font-size: 18px; margin-top: 5px; cursor: pointer; color: #8ebfbf; background-color: #f5fdfc; border-bottom: 1px solid #fdf7f7;">
+                        {{item.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 游戏展示 -->
+        <div style="width: 72%; border: 1px solid #9ae6ff; border-radius: 15px; background-color: #c7e3dc; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="position: relative; height: 40px; background-color: #a9e7fb; width: 100%; font-size: 24px; color: #1b6d85; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <b style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">游戏展示</b>
+                <input type="text"
+                       style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); height: 30px; font-size: 16px;"
+                       placeholder="请输入游戏关键字查询"
+                       v-model="searchText"
+                       @keyup.enter="searchGames">
+            </div>
+            <div style="padding: 10px; font-size: 14px;">
+                <ul class="nx-games-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 0; list-style: none; margin: 0;">
+                    <li v-for="item in gamesList" style="width: calc(33.33% - 20px); text-align: center; background-color: #ffffff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s;">
+                        <a :href="'/front/gamesInfo.html?gamesId='+item.id" target="_blank">
+                            <div><img :src="item.src" style="height: 100px; width: auto; max-width: 100%; border-radius: 10px;"></div>
+                            <div style="font-size: 16px; margin-top: 10px; color: #8ebfbf;">{{item.name}}</div>
+                            <div style="text-align: center; font-size: 14px; color: #85c3b7; margin-top: 10px;">厂商：{{item.maker}}</div>
+                            <div style="font-size: 14px; color: #95b7c8;">$ {{item.price}}</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/swiper-5.4.5/swiper.min.js"></script>
+<script src="js/vue2.6.11/vue.min.js"></script>
+<script src="js/vue2.6.11/axios.js"></script>
+<script src="js/my.js"></script>
+<script>
+
+    function msg(type,msg) {
+        Vue.prototype.$message({
+            type: type, //success,warning,error
+            message:msg,
+            duration:2000,
+            offset:100,   //消息框到顶部的距离
+            center:true
+        });
+
+    }
+
+    //轮播图
+    $(function () {
+       var mySwiper = new Swiper('.swiper-container',{
+           autoplay: {
+               delay:3000,
+               disableOnInteraction: false
+           },
+           loop: true,
+           speed: 3000,
+           //分页
+           pagination: {
+               el: '.swiper-pagination',
+               clickable: true,
+
+           },
+           //前进后退
+           navigation: {
+               nextEl: '.swiper-button-next',
+               prevEl: '.swiper-button-prev',
+           }
+       });
+       //移入停止
+       var $swiperSlide = $('.swiper-slide');
+        $swiperSlide.mouseenter(function () {
+            mySwiper.autoplay.stop();
+        });
+        //移出自动滚动
+        $swiperSlide.mouseleave(function () {
+            mySwiper.autoplay.start();
+        });
+
+    });
+
+    new Vue({
+        el: "#wrapper",
+        data:{
+            user: {},
+            searchText: '',//游戏关键字
+            isShow: false, //是否显示进入后台
+            isLogin:false,//是否已登录
+            typeObjs: [], //游戏类型列表
+            activeIndex: 0, //当前选择的类型
+            gamesList: [],//游戏列表
+
+            recommends: [], //编辑推荐游戏
+            recommendPages: 1,//编辑推荐游戏总页数
+            recommendPage:1,//当前页
+
+            hots: [],//hot游戏
+            hotPages: 1,//编辑hot游戏总页数
+            hotPage:1,//hot当前页
+
+            newDates:[],//最新上线
+            datePages: 1,//编辑最新上线游戏总页数
+            datePage:1,//最新上线当前页
+
+            gamesData:[],//随机推荐 ubcf
+            gamesInfos:[],//ibcf
+            gamescontent:[],//content
+
+        },
+        created: function () {
+            //查权限
+            axios.get('/auth').then(res => {
+                if(res.data.code === '0'){
+                    this.user = res.data.data;
+                    console.log("用户信息：", this.user);
+                    if(this.user.level === 1){
+                        this.isShow = true;
+                    }
+                    this.isLogin = true;
+                 }
+                this.loadGames();
+                this.getRecommend();
+                this.getRecommendContent();
+            });
+
+            //查游戏类型列表
+            axios.get("/typeInfo").then(res => {
+                this.typeObjs = res.data.data;
+                this.findByTypeId(0,this.typeObjs[0].id);
+            });
+            this.loadRecommends(1);
+            this.loadHots(1);
+            this.loadDates(1);
+
+        },
+
+        methods: {
+            logout() {
+                axios.get('/logout').then(res => {
+                    if (res.data.code === '0') {
+                        location.href = '/front/index.html';
+                    }else {
+                        msg('error',res.data.msg);
+                    }
+                });
+            },
+            //根据关键字搜索游戏
+            searchGames(){
+                if (this.searchText){
+                    axios.get('/gamesInfo/searchGames',{params: {text: this.searchText}}).then(res => {
+                        if (res.data.code === '0') {
+                            this.gamesList = res.data.data;
+                            this.gamesList.forEach(item => {
+                                let imgDefault ="/front/img/default.jpg";
+                                if (item.pictures){
+                                    let fileId = JSON.parse(item.pictures)[0];
+                                    imgDefault = "/files/download/"+fileId;
+                                }
+                                item.src = imgDefault;
+                            });
+                            this.activeIndex = null;
+                        }else {
+                            msg('error',res.data.msg);
+                        }
+                    });
+                }else {
+                    this.findByTypeId(0,this.typeObjs[0].id);
+                }
+            },
+            //根据游戏类型查询最新的数据
+            findByTypeId(index,typeId){
+                this.activeIndex = index;
+                axios.get('/gamesInfo/findByTypeId/'+typeId).then(res => {
+                    if (res.data.code === '0') {
+                        this.gamesList = res.data.data;
+                        if (this.gamesList.length > 9) {
+                            this.gamesList = this.gamesList.slice(0, 9);
+                        }
+                        this.gamesList.forEach(item => {
+                            let imgDefault ="/front/img/default.jpg";
+                            if (item.pictures){
+                                let fileId = JSON.parse(item.pictures)[0];
+                                imgDefault = "/files/download/"+fileId;
+                            }
+                            item.src = imgDefault;
+                        });
+                    }else {
+                        msg('error',res.data.msg);
+                    }
+                });
+            },
+
+            //获取编辑推荐游戏
+            loadRecommends(pageNum){
+                axios.get("/gamesInfo/recommend?pageNum="+pageNum).then(res => {
+                   if (res.data.code === '0'){
+                       this.recommends = res.data.data.list;
+
+                       this.recommends.forEach(item => {
+                           let imgDefault ="/front/img/default.jpg";
+                           if (item.pictures){
+                               let fileId = JSON.parse(item.pictures)[0];
+                               imgDefault = "/files/download/"+fileId;
+                           }
+                           item.src = imgDefault;
+                       });
+                       this.recommendPages = Math.ceil(res.data.data.total/12);
+                   } else {
+                       msg('error',res.data.msg);
+                   }
+                });
+            },
+
+            //编辑推荐游戏翻页
+            recommend(direction){
+                if (direction === 'left'){
+                    this.recommendPage = (this.recommendPage === 1) ? 1 : ( this.recommendPage - 1);
+                }else {
+                    this.recommendPage = (this.recommendPage === this.recommendPages) ? this.recommendPages : (this.recommendPage + 1);
+                }
+                this.loadRecommends(this.recommendPage);
+            },
+
+            //获取hot游戏
+            loadHots(pageNum){
+                axios.get("/gamesInfo/hotgames?pageNum="+pageNum).then(res => {
+                    if (res.data.code === '0'){
+                        this.hots = res.data.data.list;
+
+                        this.hots.forEach(item => {
+                            let imgDefault ="/front/img/default.jpg";
+                            if (item.pictures){
+                                let fileId = JSON.parse(item.pictures)[0];
+                                imgDefault = "/files/download/"+fileId;
+                            }
+                            item.src = imgDefault;
+                        });
+                        this.hotPages = Math.ceil(res.data.data.total/12);
+                    } else {
+                        msg('error',res.data.msg);
+                    }
+                });
+            },
+            //hot游戏翻页
+            hotgames(direction){
+                if (direction === 'left'){
+                    this.hotPage = (this.hotPage === 1) ? 1 : ( this.hotPage - 1);
+                }else {
+                    this.hotPage = (this.hotPage === this.hotPages) ? this.hotPages : (this.hotPage + 1);
+                }
+                this.loadHots(this.hotPage);
+            },
+
+            //获取最新游戏
+            loadDates(pageNum){
+                axios.get("/gamesInfo/dategames?pageNum="+pageNum).then(res => {
+                    if (res.data.code === '0'){
+                        this.newDates = res.data.data.list;
+                        this.newDates.forEach(item => {
+                            let imgDefault ="/front/img/default.jpg";
+                            if (item.pictures){
+                                let fileId = JSON.parse(item.pictures)[0];
+                                imgDefault = "/files/download/"+fileId;
+                            }
+                            item.src = imgDefault;
+                        });
+                        this.datePages = Math.ceil(res.data.data.total/12);
+                    } else {
+                        msg('error',res.data.msg);
+                    }
+                });
+            },
+            //最新游戏翻页
+            dategames(direction){
+                if (direction === 'left'){
+                    this.datePage = (this.datePage === 1) ? 1 : ( this.datePage - 1);
+                }else {
+                    this.datePage = (this.datePage === this.datePages) ? this.datePages : (this.datePage + 1);
+                }
+                this.loadDates(this.datePage);
+            },
+            //UBCF
+            loadGames(){
+                if (this.user && this.user.id) {
+                    axios.get(`/gamesInfo/recommendAction/${this.user.id}`).then(res => {
+                        if (res.data.code === '0') {
+                            this.gamesData = res.data.data;
+                            // if (this.gamesData.length > 12) {
+                            //     this.gamesData = this.gamesData.slice(0, 12);
+                            // }
+                            console.log("用户推荐的游戏列表：", this.gamesData);
+                            this.gamesData.forEach(item => {
+                                let imgDefault ="/front/img/default.jpg";
+                                if (item.pictures){
+                                    let fileId = JSON.parse(item.pictures)[0];
+                                    imgDefault = "/files/download/"+fileId;
+                                }
+                                item.src = imgDefault;
+                            });
+                        } else {
+                            alert( res.data.msg);
+                        }
+                    }).catch(err => {
+                        alert('请求失败，请稍后重试');
+                    });
+                } else {
+                    axios.get("/gamesInfo/recommendRandom").then(res => {
+                                if (res.data.code === '0'){
+                                    this.gamesData = res.data.data;
+                                    // if (this.gamesData.length > 12) {
+                                    //     this.gamesData = this.gamesData.slice(0, 12);
+                                    // }
+                                    console.log("随机推荐的游戏列表1：", this.gamesData);
+                                    this.gamesData.forEach(item => {
+                                        let imgDefault ="/front/img/default.jpg";
+                                        if (item.pictures){
+                                            let fileId = JSON.parse(item.pictures)[0];
+                                            imgDefault = "/files/download/"+fileId;
+                                        }
+                                        item.src = imgDefault;
+                                    });
+                                } else {
+                                    msg('error',res.data.msg);
+                                }
+                            });
+                }
+
+            },
+
+            //IBCF
+            getRecommend(){
+                if (this.user && this.user.id) {
+                    axios.get(`/gamesInfo/recommendGames/${this.user.id}`).then(res => {
+                        if (res.data.code === '0') {
+                            this.gamesInfos = res.data.data;
+                            // this.gamesData = this.gamesData.slice(0, 9);
+                            console.log("物品推荐的游戏列表：", this.gamesInfos);
+                            this.gamesInfos.forEach(item => {
+                                let imgDefault ="/front/img/default.jpg";
+                                if (item.pictures){
+                                    let fileId = JSON.parse(item.pictures)[0];
+                                    imgDefault = "/files/download/"+fileId;
+                                }
+                                item.src = imgDefault;
+                            });
+                        } else {
+                            alert( res.data.msg);
+                        }
+                    }).catch(err => {
+                        alert('请求失败，请稍后重试');
+                    });
+                } else {
+                    axios.get("/gamesInfo/recommendRandom").then(res => {
+                        if (res.data.code === '0'){
+                            this.gamesInfos = res.data.data;
+                            // if (this.gamesInfos.length > 12) {
+                            //     this.gamesInfos = this.gamesInfos.slice(0, 12);
+                            // }
+                            console.log("随机推荐的游戏列表2：", this.gamesInfos);
+                            this.gamesInfos.forEach(item => {
+                                let imgDefault ="/front/img/default.jpg";
+                                if (item.pictures){
+                                    let fileId = JSON.parse(item.pictures)[0];
+                                    imgDefault = "/files/download/"+fileId;
+                                }
+                                item.src = imgDefault;
+                            });
+                        } else {
+                            msg('error',res.data.msg);
+                        }
+                    });
+                }
+
+            },
+
+            //content
+            getRecommendContent(){
+                if (this.user && this.user.id) {
+                    axios.get(`/gamesInfo/recommendCarts/${this.user.id}`).then(res => {
+                        if (res.data.code === '0') {
+                            this.gamescontent = res.data.data;
+                            // this.gamesData = this.gamesData.slice(0, 9);
+                            console.log("内容推荐的游戏列表：", this.gamescontent);
+                            this.gamescontent.forEach(item => {
+                                let imgDefault ="/front/img/default.jpg";
+                                if (item.pictures){
+                                    let fileId = JSON.parse(item.pictures)[0];
+                                    imgDefault = "/files/download/"+fileId;
+                                }
+                                item.src = imgDefault;
+                            });
+                        } else {
+                            alert( res.data.msg);
+                        }
+                    }).catch(err => {
+                        alert('请求失败，请稍后重试');
+                    });
+                } else {
+                    axios.get("/gamesInfo/recommendRandom").then(res => {
+                        if (res.data.code === '0'){
+                            this.gamesInfos = res.data.data;
+                            // if (this.gamesInfos.length > 12) {
+                            //     this.gamesInfos = this.gamesInfos.slice(0, 12);
+                            // }
+                            console.log("随机推荐的游戏列表3：", this.gamesInfos);
+                            this.gamesInfos.forEach(item => {
+                                let imgDefault ="/front/img/default.jpg";
+                                if (item.pictures){
+                                    let fileId = JSON.parse(item.pictures)[0];
+                                    imgDefault = "/files/download/"+fileId;
+                                }
+                                item.src = imgDefault;
+                            });
+                        } else {
+                            msg('error',res.data.msg);
+                        }
+                    });
+                }
+
+            }
+
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评价信息</title>
+    <link href="css/swiper-5.4.5/swiper.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/my.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+
+    <style>
+        .nx-nav-container ul {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nx-nav-container ul li {
+            display: inline-block;
+            width: 120px;
+            text-align: center;
+            line-height: 45px;
+        }
+
+        .nx-nav-container a {
+            color: #FFFFFF;
+        }
+
+        .nx-nav-container a:hover {
+            color: aquamarine;
+            text-decoration: none;
+        }
+
+        td {
+            vertical-align: middle !important;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            padding: 12px 15px;
+        }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+
+        .pagination .page-link {
+            background-color: #a8d8d8;
+            border: 1px solid #d1e7e3;
+            color: #333;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: #f1f1f1;
+            color: #999;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #77c7c4;
+            color: white;
+        }
+
+        .comment-container { width: 80%; margin: 20px auto; }
+        .comment { border-bottom: 1px solid #ccc; padding: 10px 0; }
+        .comment .user { font-weight: bold; }
+        .comment .time { color: #888; }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <div style="text-align: center;">
+        <iframe width="700" scrolling="no" height="60" frameborder="0" src="https://i.tianqi.com/index.php?c=code&amp;id=12&amp;num=5"></iframe>
+    </div>
+    <div class="nx-header">
+        <div style="display: flex;width: 100%;height: 30px;line-height: 30px;background-color: #f1f8ff;">
+            <div style="flex: 5;padding: 0 10px;color: #1b6d85;">
+                欢迎访问游戏推荐系统
+            </div>
+            <div v-if="user.name" style="flex: 1">
+                欢迎您：{{user.name}}
+                <a style="margin-left: 30px;color: blue;" href="javascript:void(0);" @click="logout">退出</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 80px;line-height: 80px;">
+        <div style="margin-left: 20px;position: relative;">
+            <img src="img/mylogo.jpg" style="width: 60px;position: absolute;top: 10px;">
+            <b style="margin-left: 60px;font-size: 25px;text-shadow: 5px 5px 3px #d9ecff;color: #1b6d85">游戏推荐系统</b>
+        </div>
+    </div>
+
+    <div class="nx-nav-container" style="height: 45px;background-color: #9acfea;">
+        <ul>
+            <li><a href="index.html">首页</a></li>
+<!--            <li><a href="advertiserInfo.html">公告信息</a></li>-->
+<!--            <li><a href="messageInfo.html">在线交流</a></li>-->
+<!--            <li><a href="linkInfo.html">友情链接</a></li>-->
+            <li><a href="cartInfo.html">收藏栏信息</a></li>
+            <li class="active"><a href="commentInfo.html">评价信息</a></li>
+            <li><a href="javascript:void(0)" @click="personalPage">个人信息</a></li>
+            <li v-if="isShow"><a href="/end/page/index.html" target="_blank">进入后台系统</a></li>
+            <li v-if="!isLogin"><a href="/end/page/login.html" target="_blank">登录</a></li>
+            <li v-if="!isLogin"><a href="/end/page/register.html" target="_blank">注册</a></li>
+        </ul>
+    </div>
+
+    <div class="container" style="margin-top: 20px; background-color: #f0f8f7; padding: 20px; border-radius: 8px;">
+        <div class="col-md-12">
+            <h2 style="text-align: center; font-size: 28px; font-weight: bold; color: #333; margin-bottom: 20px;">游戏评价信息</h2>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <label for="gameId" style="font-size: 18px; color: #555;">游戏ID: </label>
+                <input type="text" id="gameId" v-model="gameId" placeholder="请输入游戏ID"
+                       style="padding: 8px; font-size: 16px; width: 300px; border-radius: 5px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-right: 10px;">
+                <button class="btn btn-primary" @click="loadComments"
+                        style="padding: 8px 16px; font-size: 16px; background-color: #488a70; border: none; color: white; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
+                    查询评价
+                </button>
+            </div>
+
+            <div v-if="comments.length > 0" style="margin-top: 30px;">
+                <div v-for="comment in comments" class="comment"
+                     style="padding: 20px; margin-bottom: 20px; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <p class="user" style="font-size: 18px; font-weight: bold; color: #333;">{{ comment.userName }}
+                        <span style="font-size: 16px; color: #ffbb33;">({{ comment.rating }}分)</span>
+                    </p>
+                    <p class="time" style="font-size: 14px; color: #888;">{{ comment.commentTime }}</p>
+                    <p style="font-size: 16px; color: #333; line-height: 1.6;">{{ comment.content }}</p>
+                </div>
+            </div>
+
+            <div v-else style="margin-top: 20px; text-align: center;">
+                <p style="font-size: 18px; color: #888;">暂无评价</p>
+            </div>
+
+
+<!--            <div style="text-align: center;">-->
+<!--                <nav>-->
+<!--                    <ul class="pagination">-->
+<!--                        <li class="page-item" :class="{disabled: preActive}">-->
+<!--                            <a class="page-link" href="javascript:void(0)" @click="loadInfo(pageInfo.pageNum - 1)" style="background-color: #a8d8d8; color: #333;">上一页</a>-->
+<!--                        </li>-->
+<!--                        <li class="page-item" :class="{disabled: preActive}">-->
+<!--                            <a class="page-link" href="javascript:void(0)" v-if="pageInfo.pageNum > 1" @click="loadInfo(pageInfo.pageNum - 1)" style="background-color: #a8d8d8; color: #333;">{{pageInfo.pageNum - 1}}</a>-->
+<!--                        </li>-->
+<!--                        <li class="page-item disabled">-->
+<!--                            <a class="page-link" href="javascript:void(0)" style="background-color: #28a745; color: white;">{{pageInfo.pageNum}}</a>-->
+<!--                        </li>-->
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" href="javascript:void(0)" v-if="pageInfo.hasNextPage" @click="loadInfo(pageInfo.hasNextPage?(pageInfo.pageNum + 1):pageInfo.pageNum)" style="background-color: #a8d8d8; color: #333;">{{pageInfo.pageNum + 1}}</a>-->
+<!--                        </li>-->
+<!--                        <li class="page-item" :class="{disabled: nextActive}">-->
+<!--                            <a class="page-link" href="javascript:void(0)" @click="loadInfo(pageInfo.hasNextPage?(pageInfo.pageNum + 1):pageInfo.pageNum)" style="background-color: #a8d8d8; color: #333;">下一页</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </nav>-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/swiper-5.4.5/swiper.min.js"></script>
+<script src="js/vue2.6.11/vue.min.js"></script>
+<script src="js/vue2.6.11/axios.js"></script>
+<script src="js/my.js"></script>
+<script>
+    new Vue({
+        el: "#wrapper",
+        data: {
+            user: {},   //当前登录用户
+            isShow: false,      //是否显示进入后台
+            isLogin: false,     //是否已登录
+            gameId: '',         //游戏ID
+            comments: [],       //游戏评价列表
+            pageInfo: {},       //翻页信息
+            preActive: true,    //是否有上一页,true表示没有，false表示有
+            nextActive: true,   //是否有下一页,true表示没有，false表示有
+        },
+        created: function () {
+            //查权限
+            axios.get('/auth').then(res => {
+                if(res.data.code === '0'){
+                    this.user = res.data.data;
+                    if(this.user.level === 1){
+                        this.isShow = true;
+                    }
+                    this.isLogin = true;
+                }
+            });
+
+            // alert(this.gamesId);
+            this.loadInfo()
+            //this.loadComments()
+        },
+        methods: {
+            //加载评价列表
+            loadComments() {
+                if (!this.gameId) {
+                    alert("请输入游戏ID");
+                    return;
+                }
+                axios.get('/commentInfo/game/' + this.gameId)
+                    .then(res => {
+                        if (res.data.code === '0') {
+                            this.comments = res.data.data;
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert("加载评价失败");
+                    });
+            },
+
+            //加载页面信息
+            loadInfo() {
+                axios.get('/auth').then(res => {
+                    if (res.data.code === '0') {
+                        this.user = res.data.data;
+                        this.isLogin = true;
+                    } else {
+                        alert("请先登录");
+                        location.href = '/end/page/login.html';
+                    }
+                });
+            },
+
+            logout() {
+                axios.get('/logout').then(res => {
+                    if (res.data.code === '0') {
+                        location.href = '/front/index.html';
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            },
+        }
+    });
+</script>
+
+</body>
+</html>
